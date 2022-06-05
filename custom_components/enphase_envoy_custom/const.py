@@ -28,7 +28,7 @@ CONF_USE_ENLIGHTEN = "use_enlighten"
 class EnvoyBinarySensorEntityDescription(BinarySensorEntityDescription):
     state_class: Optional = None
     native_unit_of_measurement: Optional = None
-    state_class=SensorStateClass: Optional = None
+    state_class: Optional = None
 
 SENSORS = (
     EnvoyBinarySensorEntityDescription(
