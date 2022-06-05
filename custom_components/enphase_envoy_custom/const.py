@@ -25,13 +25,9 @@ NAME = "name"
 CONF_SERIAL = "serial"
 CONF_USE_ENLIGHTEN = "use_enlighten"
 
-class EnvoyBinarySensorEntityDescription(BinarySensorEntityDescription):
-    state_class: Optional = None
-    native_unit_of_measurement: Optional = None
-    state_class: Optional = None
 
 SENSORS = (
-    EnvoyBinarySensorEntityDescription(
+    BinarySensorEntityDescription(
         key="grid_status",
         name="Grid Status",
         device_class=BinarySensorDeviceClass.POWER,

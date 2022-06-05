@@ -92,6 +92,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     data[description.key] = grid
 
                 else:
+                    print(description)
                     data[description.key] = await getattr(
                         envoy_reader, description.key
                     )()

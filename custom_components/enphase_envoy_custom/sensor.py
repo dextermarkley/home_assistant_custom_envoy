@@ -4,6 +4,7 @@ from __future__ import annotations
 from time import strftime, localtime
 
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
@@ -77,13 +78,13 @@ async def async_setup_entry(
                 continue
 
             entity_name = f"{name} {sensor_description.name}"
-            entities.append(
+            entities.BinarySensorEntity(
                 EnvoyEntity(
                     sensor_description,
                     entity_name,
                     name,
                     config_entry.unique_id,
-                    None,
+                    serial_number,
                     coordinator,
                 )
             )

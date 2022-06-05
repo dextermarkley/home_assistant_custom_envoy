@@ -321,7 +321,6 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
         # token not valid if we get here
         return False
 
-
     def _is_enphase_token_valid(self, response):
         if response == "Valid token.":
             _LOGGER.debug("Token is valid")
