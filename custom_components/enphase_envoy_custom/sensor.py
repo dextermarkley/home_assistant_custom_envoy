@@ -63,13 +63,12 @@ async def async_setup_entry(
             entity_name = f"{name} {sensor_description.name}"
             serial_number = "enpower_switch"
             entities.append(
-                EnvoyEntity(
-                    sensor_description,
-                    entity_name,
-                    name,
-                    config_entry.unique_id,
-                    serial_number,
-                    coordinator
+                EnvoyGridStatusEntity(
+                    description=sensor_description,
+                    name=entity_name,
+                    device_name=name,
+                    serial_number=serial_number,
+                    coordinator=coordinator
                 )
             )
         else:
@@ -78,13 +77,13 @@ async def async_setup_entry(
                 continue
 
             entity_name = f"{name} {sensor_description.name}"
-            entities.BinarySensorEntity(
+            entities.append(
                 EnvoyEntity(
                     sensor_description,
                     entity_name,
                     name,
                     config_entry.unique_id,
-                    serial_number,
+                    None,
                     coordinator,
                 )
             )
@@ -93,6 +92,60 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
+
+class EnvoyGridStatusEntity(CoordinatorEntity, BinarySensorEntity):
+    """Envoy entity"""
+
+    def __init__(
+            self,
+            description,
+            name,
+            device_name,
+            serial_number,
+            coordinator,
+    ):
+        """Initialize Envoy entity."""
+        self.entity_description = description
+        self._name = name
+        self._serial_number = serial_number
+        self._device_name = device_name
+
+        super().__init__(coordinator)
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def unique_id(self):
+        """Return the unique id of the sensor."""
+        if self._serial_number:
+            return self._serial_number
+        if self._device_serial_number:
+            return f"{self._device_serial_number}_{self.entity_description.key}"
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        return self.coordinator.data.get(self.entity_description.key)
+
+    @property
+    def icon(self):
+        """Icon to use in the frontend, if any."""
+        return ICON
+
+    @property
+    def device_info(self) -> DeviceInfo | None:
+        """Return the device_info of the device."""
+        if not self._device_serial_number:
+            return None
+        return DeviceInfo(
+            identifiers={(DOMAIN, str(self._device_serial_number))},
+            manufacturer="Enphase",
+            model="Envoy - Enpower Smart Switch",
+            name=self._device_name,
+        )
 
 class EnvoyGridStatusEntity(CoordinatorEntity, SensorEntity):
     """Envoy entity"""
