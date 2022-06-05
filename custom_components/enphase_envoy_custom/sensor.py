@@ -92,67 +92,62 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
-#
-# class EnvoyGridStatusEntity(CoordinatorEntity, SensorEntity):
-#     """Envoy entity"""
-#
-#     def __init__(
-#             self,
-#             description,
-#             name,
-#             device_name,
-#             serial_number,
-#             coordinator,
-#     ):
-#         """Initialize Envoy entity."""
-#         self.entity_description = description
-#         self._name = name
-#         self._serial_number = serial_number
-#         self._device_name = device_name
-#
-#         super().__init__(coordinator)
-#
-#     @property
-#     def name(self):
-#         """Return the name of the sensor."""
-#         return self._name
-#
-#     @property
-#     def unique_id(self):
-#         """Return the unique id of the sensor."""
-#         if self._serial_number:
-#             return self._serial_number
-#         if self._device_serial_number:
-#             return f"{self._device_serial_number}_{self.entity_description.key}"
-#
-#     @property
-#     def native_value(self):
-#         """Return the state of the sensor."""
-#         return self.coordinator.data.get(self.entity_description.key)
-#
-#     @property
-#     def icon(self):
-#         """Icon to use in the frontend, if any."""
-#         return ICON
-#
-#     @property
-#     def extra_state_attributes(self):
-#         """Return the state attributes."""
-#         return None
-#
-#     @property
-#     def device_info(self) -> DeviceInfo | None:
-#         """Return the device_info of the device."""
-#         if not self._device_serial_number:
-#             return None
-#         return DeviceInfo(
-#             identifiers={(DOMAIN, str(self._device_serial_number))},
-#             manufacturer="Enphase",
-#             model="Envoy - Enpower Smart Switch",
-#             name=self._device_name,
-#         )
-#
-#
+
+class EnvoyGridStatusEntity(CoordinatorEntity, SensorEntity):
+    """Envoy entity"""
+
+    def __init__(
+            self,
+            description,
+            name,
+            device_name,
+            serial_number,
+            coordinator,
+    ):
+        """Initialize Envoy entity."""
+        self.entity_description = description
+        self._name = name
+        self._serial_number = serial_number
+        self._device_name = device_name
+
+        super().__init__(coordinator)
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def unique_id(self):
+        """Return the unique id of the sensor."""
+        if self._serial_number:
+            return self._serial_number
+        if self._device_serial_number:
+            return f"{self._device_serial_number}_{self.entity_description.key}"
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        return self.coordinator.data.get(self.entity_description.key)
+
+    @property
+    def icon(self):
+        """Icon to use in the frontend, if any."""
+        return ICON
+
+    @property
+    def device_info(self) -> DeviceInfo | None:
+        """Return the device_info of the device."""
+        if not self._device_serial_number:
+            return None
+        return DeviceInfo(
+            identifiers={(DOMAIN, str(self._device_serial_number))},
+            manufacturer="Enphase",
+            model="Envoy - Enpower Smart Switch",
+            name=self._device_name,
+        )
+
+
 class EnvoyEntity(CoordinatorEntity, SensorEntity):
     """Envoy entity"""
 

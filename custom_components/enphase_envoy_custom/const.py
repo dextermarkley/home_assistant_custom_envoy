@@ -1,6 +1,6 @@
 """The enphase_envoy component."""
 
-
+from typing import Optional
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
@@ -25,8 +25,12 @@ NAME = "name"
 CONF_SERIAL = "serial"
 CONF_USE_ENLIGHTEN = "use_enlighten"
 
+class EnvoyBinarySensorEntityDescription(BinarySensorEntityDescription):
+    state_class: Optional = None
+
+
 SENSORS = (
-    BinarySensorEntityDescription(
+    EnvoyBinarySensorEntityDescription(
         key="grid_status",
         name="Grid Status",
         device_class=BinarySensorDeviceClass.POWER,
