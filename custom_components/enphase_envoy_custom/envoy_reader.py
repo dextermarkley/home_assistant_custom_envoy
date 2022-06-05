@@ -26,6 +26,7 @@ LIFE_PRODUCTION_REGEX = (
 SERIAL_REGEX = re.compile(r"Envoy\s*Serial\s*Number:\s*([0-9]+)")
 
 ENDPOINT_URL_PRODUCTION_JSON = "http{}://{}/production.json"
+ENDPOINT_URL_HOME_JSON = "http{}://{}/home.json"
 ENDPOINT_URL_PRODUCTION_V1 = "http{}://{}/api/v1/production"
 ENDPOINT_URL_PRODUCTION_INVERTERS = "http{}://{}/api/v1/production/inverters"
 ENDPOINT_URL_PRODUCTION = "http{}://{}/production"
@@ -101,6 +102,7 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
         self.endpoint_type = None
         self.serial_number_last_six = None
         self.endpoint_production_json_results = None
+        self.home_json_results = None
         self.endpoint_production_v1_results = None
         self.endpoint_production_inverters = None
         self.endpoint_production_results = None
@@ -128,6 +130,7 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
 
     async def _update(self):
         """Update the data."""
+        await self._update_from_home_endpoint()
         if self.endpoint_type == ENVOY_MODEL_S:
             await self._update_from_pc_endpoint()
         if self.endpoint_type == ENVOY_MODEL_C or (
@@ -158,9 +161,16 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
             "endpoint_production_results", ENDPOINT_URL_PRODUCTION
         )
 
+    async def _update_from_home_endpoint(self):
+        """Update from home endpoint."""
+        await self._update_endpoint(
+            "home_json_results", ENDPOINT_URL_HOME_JSON
+        )
+
     async def _update_endpoint(self, attr, url):
         """Update a property from an endpoint."""
         formatted_url = url.format(self.https_flag, self.host)
+        print(formatted_url)
         response = await self._async_fetch_with_retry(
             formatted_url, follow_redirects=False
         )
@@ -397,7 +407,7 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
         # number as the password.  Otherwise use the password argument value.
         if self.password == "" and not self.serial_number_last_six:
             await self.get_serial_number()
-
+        await self._update_from_home_endpoint()
         try:
             await self._update_from_pc_endpoint()
         except httpx.HTTPError:
@@ -527,6 +537,12 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
             else:
                 raise RuntimeError("No match for production, check REGEX  " + text)
         return int(production)
+
+    async def grid(self):
+        """Running getData() beforehand will set self.enpoint_type and self.isDataRetrieved"""
+        """so that this method will only read data from stored variables"""
+        raw_json = self.home_json_results.json()
+        return raw_json["enpower"]["grid_status"] == "closed"
 
     async def consumption(self):
         """Running getData() beforehand will set self.enpoint_type and self.isDataRetrieved"""
@@ -745,10 +761,11 @@ class EnvoyReader:  # pylint: disable=too-many-instance-attributes
                 self.lifetime_consumption(),
                 self.inverters_production(),
                 self.battery_storage(),
+                self.grid(),
                 return_exceptions=False,
             )
         )
-
+        print(f"grid:                    {results[10]}")
         print(f"production:              {results[0]}")
         print(f"consumption:             {results[1]}")
         print(f"daily_production:        {results[2]}")

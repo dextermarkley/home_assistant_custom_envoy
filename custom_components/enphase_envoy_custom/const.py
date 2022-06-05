@@ -6,6 +6,12 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
+
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntityDescription,
+)
+
 from homeassistant.const import ENERGY_WATT_HOUR, POWER_WATT, Platform, PERCENTAGE
 
 DOMAIN = "enphase_envoy"
@@ -20,6 +26,11 @@ CONF_SERIAL = "serial"
 CONF_USE_ENLIGHTEN = "use_enlighten"
 
 SENSORS = (
+    BinarySensorEntityDescription(
+        key="grid_status",
+        name="Grid Status",
+        device_class=BinarySensorDeviceClass.POWER,
+    ),
     SensorEntityDescription(
         key="production",
         name="Current Power Production",

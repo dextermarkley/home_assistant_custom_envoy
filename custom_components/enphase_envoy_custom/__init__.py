@@ -87,6 +87,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             battery_sum += (battery_capacity * (battery_percentage / 100))
 
                         data[description.key] = round(battery_sum, 2)
+                elif description.key == "grid_status":
+                    grid = await envoy_reader.grid()
+                    data[description.key] = grid
 
                 else:
                     data[description.key] = await getattr(
