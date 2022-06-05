@@ -140,7 +140,7 @@ class EnvoyGridStatusEntity(CoordinatorEntity, BinarySensorEntity):
         return DeviceInfo(
             identifiers={(DOMAIN, "grid_status")},
             manufacturer="Enphase",
-            model="Envoy - Enpower Smart Switch",
+            model="Envoy",
             name=self._device_name,
         )
 
