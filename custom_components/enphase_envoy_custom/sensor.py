@@ -61,7 +61,7 @@ async def async_setup_entry(
                     )
         elif (sensor_description.key == "grid_status"):
             entity_name = f"{name} {sensor_description.name}"
-            serial_number = "enpower_switch"
+            serial_number = "grid_status"
             entities.append(
                 EnvoyGridStatusEntity(
                     description=sensor_description,
@@ -87,8 +87,6 @@ async def async_setup_entry(
                     coordinator,
                 )
             )
-
-
 
     async_add_entities(entities)
 
