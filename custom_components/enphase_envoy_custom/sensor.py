@@ -121,8 +121,7 @@ class EnvoyGridStatusEntity(CoordinatorEntity, BinarySensorEntity):
     @property
     def unique_id(self):
         """Return the unique id of the sensor."""
-        return self._serial_number + "_grid_status"
-
+        return "grid_status"
 
     @property
     def native_value(self):

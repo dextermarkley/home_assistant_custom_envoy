@@ -89,7 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         data[description.key] = round(battery_sum, 2)
                 elif description.key == "grid_status":
                     grid_status = await envoy_reader.grid()
-                    data[description.key] = True
+                    data[description.key] = {"grid_status": True}
 
                 else:
                     print(description)
