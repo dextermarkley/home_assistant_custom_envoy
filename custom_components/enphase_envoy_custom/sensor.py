@@ -107,7 +107,7 @@ class EnvoyGridStatusEntity(CoordinatorEntity, BinarySensorEntity):
         self._name = name
         self._serial_number = serial_number
         self._device_name = device_name
-        self._device_serial_number = serial_number + "_grid_status"
+        self._device_serial_number = "grid_status"
 
         super().__init__(coordinator)
 
