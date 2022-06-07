@@ -54,6 +54,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 raise UpdateFailed(f"Error communicating with API: {err}") from err
 
             for description in SENSORS:
+                print(description.key + " This is the key")
                 if description.key == "inverters":
                     data[
                         "inverters_production"
@@ -88,6 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
                         data[description.key] = round(battery_sum, 2)
                 elif description.key == "grid_status":
+
                     grid_status = await envoy_reader.grid()
                     data[description.key] = False
 
