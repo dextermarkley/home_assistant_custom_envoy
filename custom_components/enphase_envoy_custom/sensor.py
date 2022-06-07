@@ -122,14 +122,9 @@ class EnvoyGridStatusEntity(CoordinatorEntity, BinarySensorEntity):
         return "grid_status"
 
     @property
-    def native_value(self):
-        """Return the state of the sensor."""
-        return True
-
-    @property
     def is_on(self):
         """Return the state of the sensor."""
-        return True
+        return self.coordinator.data.get("grid_status")
 
     @property
     def icon(self):
